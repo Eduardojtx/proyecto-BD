@@ -3,14 +3,14 @@ from dotenv import load_dotenv
 import mysql.connector
 from mysql.connector import Error
 import os
-load_dotenv()
+load_dotenv('connect.env')
 app = Flask(__name__)
 
 # Configuración de conexión (usando variables de entorno)
-DB_HOST = os.getenv('DB_HOST', 'localhost')
-DB_USER = os.getenv('DB_USER', 'eduardo')
-DB_PASSWORD = os.getenv('DB_PASSWORD', 'e1d2o0p6m')
-DB_NAME = os.getenv('DB_NAME', 'refaccionaria')
+DB_HOST = os.getenv('DB_HOST')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_NAME = os.getenv('DB_NAME')
 
 # Función para manejar la conexión a la base de datos
 def get_db_connection():
@@ -81,7 +81,7 @@ def eliminar_producto():
     if connection:
         try:
             cursor = connection.cursor()
-            query = "DELETE FROM productos WHERE id = %s"
+            query = "DELETE FROM productos WHERE id = %s "
             cursor.execute(query, (data['id'],))
             connection.commit()
             return jsonify({'message': 'Producto eliminado con éxito'})

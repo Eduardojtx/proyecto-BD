@@ -16,7 +16,7 @@ function enviarFormulario(tipo) {
         };
     } else if (tipo === 'eliminar') {
         formData = {
-            id: document.querySelector("input[name='id']").value
+            id: document.querySelector("input[name='ID']").value
         };
     }
 
