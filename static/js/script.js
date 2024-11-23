@@ -10,9 +10,9 @@ function enviarFormulario(tipo) {
         };
     } else if (tipo === 'modificar') {
         formData = {
-            id: document.querySelector("input[name='id']").value,
-            nombre: document.querySelector("input[name='nombre']").value,
-            cantidad: document.querySelector("input[name='cantidad']").value
+            id: document.querySelector("input[name='idModificar']").value,
+            nombre: document.querySelector("input[name='nombreModificar']").value,
+            cantidad: document.querySelector("input[name='cantidadModificar']").value
         };
     } else if (tipo === 'eliminar') {
         formData = {
@@ -24,6 +24,10 @@ function enviarFormulario(tipo) {
     let url = tipo === 'nuevo' ? '/nuevo' : tipo === 'modificar' ? '/modificar' : '/eliminar';
     let method = tipo === 'eliminar' ? 'DELETE' : 'POST';
 
+    // Verifica el contenido de formData antes de convertirlo a JSON
+    //console.log("Contenido de formData:", formData);
+    //console.log("Cadena JSON generada:", JSON.stringify(formData));
+
     fetch(url, {
         method: method,
         headers: {
@@ -33,7 +37,19 @@ function enviarFormulario(tipo) {
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);  // Mostrar mensaje de éxito
+        if (data.message){
+            alert(data.message); //Mostrar mensaje de exito
+            // Limpiar el formulario correspondiente
+            if (tipo === 'nuevo') {
+                document.getElementById("formNuevo").reset();
+            } else if (tipo === 'modificar') {
+                document.getElementById("formModificar").reset();
+            } else if (tipo === 'eliminar') {
+                document.getElementById("formEliminar").reset();
+            }
+        } else {
+            alert(data.error || 'Error al procesar la solicitud'); // Mostrar mensaje de error
+        }
         cargarProductos();    // Recargar la tabla de productos después de la acción
     })
     .catch(error => {

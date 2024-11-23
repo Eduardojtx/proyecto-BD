@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import mysql.connector
 from mysql.connector import Error
 import os
+
+# Cargar las variables desde connect.env
 load_dotenv('connect.env')
 app = Flask(__name__)
 
@@ -53,7 +55,7 @@ def nuevo_producto():
         return jsonify({'error': 'Error al conectar con la base de datos'}), 500
 
 # Ruta para modificar un producto
-@app.route('/modificar', methods=['PUT'])
+@app.route('/modificar', methods=['POST'])
 def modificar_producto():
     data = request.json
     connection = get_db_connection()
@@ -84,7 +86,10 @@ def eliminar_producto():
             query = "DELETE FROM productos WHERE id = %s "
             cursor.execute(query, (data['id'],))
             connection.commit()
-            return jsonify({'message': 'Producto eliminado con éxito'})
+            if cursor.rowcount > 0:
+                return jsonify({'message': 'Producto eliminado con éxito'})
+            else:
+                return jsonify({'error': 'Producto no encontrado'}), 404
         except Error as e:
             print(f"Error al eliminar producto: {e}")
             return jsonify({'error': 'No se pudo eliminar el producto'}), 500
